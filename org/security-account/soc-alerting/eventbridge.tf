@@ -9,5 +9,5 @@ resource "aws_cloudwatch_event_rule" "opensearch_alerts" {
 resource "aws_cloudwatch_event_target" "sns" {
   rule      = aws_cloudwatch_event_rule.opensearch_alerts.name
   target_id = "send-to-sns"
-  arn       = aws_sns_topic.critical.arn
+  arn       = aws_sns_topic.high.arn
 }
