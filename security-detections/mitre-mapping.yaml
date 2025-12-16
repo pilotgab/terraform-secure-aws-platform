@@ -1,0 +1,25 @@
+detections:
+  - name: Root account usage
+    mitre_technique:
+      id: T1078
+      name: Valid Accounts
+
+  - name: AssumedRole abuse
+    mitre_technique:
+      id: T1098
+      name: Account Manipulation
+
+  - name: GuardDuty malware
+    mitre_technique:
+      id: T1204
+      name: User Execution
+
+  - name: VPC scanning
+    mitre_technique:
+      id: T1046
+      name: Network Service Scanning
+
+  - name: Terraform state access
+    mitre_technique:
+      id: T1552
+      name: Unsecured Credentials
