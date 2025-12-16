@@ -17,12 +17,8 @@ resource "aws_lb_listener" "https" {
   certificate_arn   = var.acm_certificate_arn
 
   default_action {
-    type = "fixed-response"
-    fixed_response {
-      content_type = "text/plain"
-      message_body = "Application is running"
-      status_code  = "200"
-    }
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.app.arn
   }
 }
 
