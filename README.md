@@ -1,4 +1,4 @@
-🚀 																											SECURE MULTI-ACCOUNT AWS PLATFORM WITH TERRAFORM
+🔐 **Secure Multi-Account AWS Platform with Terraform**
 
 A production-ready, security-hardened multi-account AWS platform implemented using Terraform. This project demonstrates enterprise-grade DevSecOps, cloud security architecture, SOC-style monitoring, and operational excellence.
 
