@@ -26,10 +26,30 @@ This project provisions a secure, scalable, and enterprise-ready AWS platform us
 - **Centralized Logging** with CloudTrail and VPC Flow Logs
 
 ### 📊 Monitoring & Compliance
-- **Centralized monitoring** with CloudWatch
+- **AWS Security Lake** for centralized security data collection
+- **Amazon OpenSearch** for security analytics and dashboards
+- **CloudWatch** for metrics and logging
 - **Security compliance** with CIS benchmarks
 - **Audit trails** for all API activity
 - **Alerting** via SNS and EventBridge
+
+## 🔍 Security Analytics & Monitoring
+
+### AWS Security Lake
+- Centralized security data lake collecting logs from all AWS accounts
+- Supports automatic ingestion of CloudTrail, VPC Flow Logs, and security findings
+- Enables security analytics across multiple data sources
+- Pre-built integrations with threat detection services
+
+### Amazon OpenSearch Security Analytics
+- Managed OpenSearch cluster for security data analysis
+- Custom dashboards for:
+  - Threat detection and response
+  - Network traffic analysis
+  - IAM access patterns
+  - Compliance reporting
+- Real-time alerting on security events
+- Integration with AWS Security Hub and GuardDuty
 
 ## 🛡 Security Features
 
@@ -51,11 +71,66 @@ This project provisions a secure, scalable, and enterprise-ready AWS platform us
 - Automated backups
 - Secrets management
 
-### Monitoring & Compliance
-- AWS GuardDuty for threat detection
-- Security Hub with CIS Benchmark
-- CloudTrail for audit logging
-- CloudWatch for monitoring and alerting
+### Security Monitoring Stack
+- **AWS Security Lake**
+  - Centralized log aggregation
+  - Normalized security data format
+  - Automated data retention policies
+
+- **Amazon OpenSearch**
+  - Real-time security analytics
+  - Custom visualizations and dashboards
+  - Anomaly detection
+
+### Amazon Athena Security Analytics
+Predefined SQL views for security analysis:
+
+#### 1. GuardDuty Findings View
+```sql
+CREATE VIEW security_guardduty_findings AS
+SELECT
+  time,
+  severity,
+  finding_type,
+  activity_name,
+  resource_type,
+  resource_uid,
+  account_uid,
+  region
+FROM amazon_security_lake_glue_db.amazon_guardduty_finding;
+```
+
+#### 2. Privileged Activity Monitoring
+```sql
+CREATE VIEW security_privileged_activity AS
+SELECT
+  time,
+  operation,
+  identity_type,
+  principal,
+  source_ip,
+  account_uid,
+  region
+FROM amazon_security_lake_glue_db.amazon_cloudtrail
+WHERE user_identity.type IN ('Root','AssumedRole');
+```
+
+#### 3. Terraform State Access Auditing
+Tracks all access to Terraform state files in S3 buckets.
+
+#### 4. VPC Traffic Anomaly Detection
+Identifies unusual network traffic patterns across VPCs.
+
+These views provide:
+- Standardized security queries
+- Cross-account visibility
+- Integration with AWS Security Lake
+- Support for compliance reporting
+
+- **AWS GuardDuty** for threat detection
+- **Security Hub** with CIS Benchmark
+- **CloudTrail** for audit logging
+- **CloudWatch** for metrics and alerting
 
 ## 🚀 Core Components
 
@@ -112,15 +187,31 @@ Security Hub
 
 ## 🧰 Terraform Design
 
-Infrastructure as Code
-	•	Modular Terraform structure
-	•	Reusable components (network, security, compute, org)
+### Infrastructure as Code
+- Modular Terraform structure
+- Remote state management
+- Workspace-based environments
+- Security-focused modules for:
+  - AWS Security Lake configuration
+  - OpenSearch domain setup
+  - Monitoring and alerting
 
-Remote State Backend
-	•	S3 backend: aws-3-tier-state
-	•	State versioning enabled
-	•	DynamoDB table for state locking
-	•	Encryption at rest
+### Backend & State Management
+- S3 bucket for remote state
+- DynamoDB table for state locking
+- Encryption at rest with KMS
+- Cross-account access controls
+
+### Security Data Pipeline
+```
+AWS Services (GuardDuty, CloudTrail, VPC Flow Logs)
+          ↓
+   AWS Security Lake (Centralized)
+          ↓
+   Amazon OpenSearch (Analytics)
+    ↓               ↓           ↓
+Dashboards    Alerts       Reports
+```
 
 ## 📂 Project Structure
 
