@@ -1,275 +1,253 @@
-<!-- BEGIN_TF_DOCS -->
-# 🚀 Secure Multi-Account AWS Platform with Terraform
+🚀 Secure Multi-Account AWS Platform with Terraform
 
-A production-ready, security-hardened AWS multi-account infrastructure as code (IaC) implementation with enterprise-grade security controls, comprehensive monitoring, and operational excellence.
+A production-ready, security-hardened multi-account AWS platform implemented using Terraform. This project demonstrates enterprise-grade DevSecOps, cloud security architecture, SOC-style monitoring, and operational excellence.
+
+⸻
 
 📌 Overview
 
-This project provisions a secure, scalable, and enterprise-ready AWS platform using Terraform. It is designed to demonstrate real-world DevSecOps and Cloud Security best practices aligned with the AWS Well-Architected Framework, AWS Security Specialty expectations, and patterns commonly used by UK enterprises and regulated environments.
+This repository provisions a secure, scalable, and enterprise-ready AWS platform using Terraform.
 
-## 🌟 Key Features
+It is designed to demonstrate real-world DevSecOps and Cloud Security best practices, aligned with:
+	•	AWS Well-Architected Framework
+	•	AWS Security Specialty expectations
+	•	Architectures commonly used by UK enterprises and regulated environments
 
-### 🔒 Security First
-- **AWS Organizations** with Service Control Policies (SCPs)
-- **Multi-account** architecture (Management, Security, Logging, Workload)
-- **End-to-end encryption** (EBS, RDS, S3, EFS) with KMS
-- **Network security** with VPC, NACLs, and security groups
-- **Identity & Access** with IAM roles, MFA enforcement, and least privilege
-- **Threat detection** via GuardDuty and Security Hub
-- **WAF** with OWASP Top 10 protection
+The focus is not only on building infrastructure, but on operating it securely in production.
 
-### 🏗 Infrastructure
-- **High Availability** across multiple AZs
-- **Auto Scaling** for web applications
-- **Managed Database** with RDS PostgreSQL
-- **Content Delivery** via CloudFront (optional)
-- **Centralized Logging** with CloudTrail and VPC Flow Logs
+⸻
 
-### 📊 Monitoring & Compliance
-- **AWS Security Lake** for centralized security data collection
-- **Amazon OpenSearch** for security analytics and dashboards
-- **CloudWatch** for metrics and logging
-- **Security compliance** with CIS benchmarks
-- **Audit trails** for all API activity
-- **Alerting** via SNS and EventBridge
+👥 Intended Audience
 
-## 🔍 Security Analytics & Monitoring
+This repository is intended for:
+	•	Cloud Engineers
+	•	Platform Engineers
+	•	DevSecOps Engineers
+	•	Security Engineers
 
-### AWS Security Lake
-- Centralized security data lake collecting logs from all AWS accounts
-- Supports automatic ingestion of CloudTrail, VPC Flow Logs, and security findings
-- Enables security analytics across multiple data sources
-- Pre-built integrations with threat detection services
+who want to see how enterprise AWS environments are designed, secured, monitored, and operated in practice.
 
-### Amazon OpenSearch Security Analytics
-- Managed OpenSearch cluster for security data analysis
-- Custom dashboards for:
-  - Threat detection and response
-  - Network traffic analysis
-  - IAM access patterns
-  - Compliance reporting
-- Real-time alerting on security events
-- Integration with AWS Security Hub and GuardDuty
+⸻
 
-## 🛡 Security Features
+🌟 Key Features
 
-### Network Security
-- VPC with public and private subnets
-- Network ACLs and security groups
-- VPC Flow Logs to S3
-- WAF with OWASP Top 10 protection
+🔒 Security First
+	•	AWS Organizations with Service Control Policies (SCPs)
+	•	Multi-account architecture:
+	•	Management
+	•	Security
+	•	Logging
+	•	Workload
+	•	IAM least privilege with MFA enforcement
+	•	Root account usage prevention and detection
+	•	End-to-end encryption (EBS, RDS, S3, EFS) using KMS
+	•	Network security with VPCs, NACLs, and security groups
+	•	Threat detection via GuardDuty and Security Hub
+	•	AWS WAFv2 with OWASP Top 10 protections
 
-### Identity & Access
-- IAM roles with least privilege
-- MFA enforcement
-- Password policies
-- Cross-account access controls
+⸻
 
-### Data Protection
-- Encryption at rest (KMS, EBS, RDS, S3)
-- Encryption in transit (TLS 1.2+)
-- Automated backups
-- Secrets management
+🏗 Infrastructure
+	•	Highly available architecture across multiple AZs
+	•	Auto Scaling application tier
+	•	Application Load Balancer (ALB)
+	•	Managed RDS PostgreSQL (private, non-public)
+	•	Optional CloudFront integration
+	•	Centralised logging via CloudTrail and VPC Flow Logs
 
-### Security Monitoring Stack
-- **AWS Security Lake**
-  - Centralized log aggregation
-  - Normalized security data format
-  - Automated data retention policies
+⸻
 
-- **Amazon OpenSearch**
-  - Real-time security analytics
-  - Custom visualizations and dashboards
-  - Anomaly detection
+📊 Monitoring, Detection & Compliance
+	•	AWS Security Lake for centralised security telemetry
+	•	Amazon OpenSearch for security analytics and dashboards
+	•	SOC-style alerting with severity classification
+	•	CloudWatch for metrics and operational alarms
+	•	CIS AWS Foundations Benchmark via Security Hub
+	•	Organisation-wide audit trails
 
-### Amazon Athena Security Analytics
-Predefined SQL views for security analysis:
+⸻
 
-#### 1. GuardDuty Findings View
-```sql
-CREATE VIEW security_guardduty_findings AS
-SELECT
-  time,
-  severity,
-  finding_type,
-  activity_name,
-  resource_type,
-  resource_uid,
-  account_uid,
-  region
-FROM amazon_security_lake_glue_db.amazon_guardduty_finding;
-```
+🚨 SOC Alerting Architecture
 
-#### 2. Privileged Activity Monitoring
-```sql
-CREATE VIEW security_privileged_activity AS
-SELECT
-  time,
-  operation,
-  identity_type,
-  principal,
-  source_ip,
-  account_uid,
-  region
-FROM amazon_security_lake_glue_db.amazon_cloudtrail
-WHERE user_identity.type IN ('Root','AssumedRole');
-```
+Security alerting follows real SOC design principles.
 
-#### 3. Terraform State Access Auditing
-Tracks all access to Terraform state files in S3 buckets.
+Key Design Decision
 
-#### 4. VPC Traffic Anomaly Detection
-Identifies unusual network traffic patterns across VPCs.
+Security alerts are generated using OpenSearch monitors — not direct EventBridge rules.
 
-These views provide:
-- Standardized security queries
-- Cross-account visibility
-- Integration with AWS Security Lake
-- Support for compliance reporting
+This enables:
+	•	Rich query-based detections
+	•	Thresholding and correlation
+	•	SOC-style alert workflows
 
-- **AWS GuardDuty** for threat detection
-- **Security Hub** with CIS Benchmark
-- **CloudTrail** for audit logging
-- **CloudWatch** for metrics and alerting
+EventBridge and CloudWatch are used only for operational monitoring of alert delivery failures (DLQ).
 
-## 🚀 Core Components
+⸻
 
-1️⃣ Secure 3-Tier Architecture
-	•	Public Application Load Balancer
-	•	Private application tier running in an Auto Scaling Group
-	•	Private RDS database (no public access)
-	•	Security Groups enforcing tier-to-tier communication only
-	•	Explicit Network ACLs for subnet-level control
+🔁 Alert Flow
+AWS Services (IAM, EC2, Network, API Activity)
+                ↓
+     GuardDuty / CloudTrail / VPC Flow Logs
+                ↓
+     AWS Security Lake (OCSF Normalised)
+                ↓
+         Amazon OpenSearch
+                ↓
+      Detection Monitors (Queries)
+                ↓
+      Severity-Based Alert Triggers
+                ↓
+        SNS Topics
+   (Critical | High | Medium)
+                ↓
+     SOC / Email / Integrations
+                ↓
+     SQS Dead Letter Queue (DLQ)
+                ↓
+      CloudWatch Alarm (DLQ)
 
-2️⃣ DNS & Secure Access
-	•	Route 53 hosted zone and ALIAS records
-	•	Custom domain: www.pilotgabapp.com
-	•	ACM-managed TLS certificates (DNS validated)
-	•	HTTPS enforced at the ALB
+⸻
 
-3️⃣ Web Application Firewall (WAF)
-	•	AWS WAFv2 attached to the ALB
-	•	AWS Managed Rules (OWASP Top 10)
-	•	WAF logging streamed to:
-	•	CloudWatch Logs (real-time visibility)
-	•	Amazon S3 via Kinesis Firehose (long-term retention)
+🔔 Alerting Model
+	•	Alerts are severity-classified:
+	•	Critical
+	•	High
+	•	Medium
+	•	Each alert:
+	•	Maps to a MITRE ATT&CK technique
+	•	Has a documented SOC runbook
+	•	Routes to a dedicated SNS topic
 
-4️⃣ Scalability & Availability
-	•	Application tier deployed using Launch Templates
-	•	Auto Scaling Group across multiple Availability Zones
-	•	ALB health checks and target groups
+⸻
 
-## 🏢 Multi-Account AWS Organization
+🔍 Security Analytics & Monitoring
 
-The platform uses AWS Organizations to reduce blast radius and enforce governance.
+AWS Security Lake
+	•	Centralised collection of security telemetry
+	•	Ingests:
+	•	CloudTrail
+	•	GuardDuty findings
+	•	VPC Flow Logs
+	•	Normalised using OCSF
+	•	Enables cross-account security analysis
+
+⸻
+
+Amazon OpenSearch Security Analytics
+	•	Managed OpenSearch cluster
+	•	Custom dashboards for:
+	•	Threat detection
+	•	IAM activity analysis
+	•	Network anomalies
+	•	Compliance reporting
+	•	Real-time alerting via monitors
+	•	Integrated with Security Hub and GuardDuty
+
+⸻
+
+Athena-Based Security Analytics
+
+Predefined SQL views enable structured investigations.
+
+GuardDuty Findings View:
+	CREATE VIEW security_guardduty_findings AS
+	SELECT
+			time,
+			severity,
+			finding_type,
+			activity_name,
+			resource_type,
+			resource_uid,
+			account_uid,
+			region
+	FROM amazon_security_lake_glue_db.amazon_guardduty_finding;
+
+Privileged Activity Monitoring
+	CREATE VIEW security_privileged_activity AS
+	SELECT
+			time,
+			operation,
+			identity_type,
+			principal,
+			source_ip,
+			account_uid,
+			region
+	FROM amazon_security_lake_glue_db.amazon_cloudtrail
+	WHERE user_identity.type IN ('Root','AssumedRole');
+
+Additional views cover:
+•	Terraform state access auditing
+•	VPC traffic anomaly detection
+
+⸻
+
+🏢 Multi-Account AWS Organization
 
 Accounts
-	•	Logging Account – centralised CloudTrail logs
-	•	Security Account – GuardDuty and Security Hub
+	•	Management – Organization administration
+	•	Security – GuardDuty, Security Hub, OpenSearch
+	•	Logging – Centralised CloudTrail and Flow Logs
+	•	Workload – Application infrastructure
 
 Guardrails
-	•	Service Control Policies (SCPs) to restrict risky actions
-	•	Denial of root account usage
+	•	Service Control Policies (SCPs)
+	•	Root account usage denial
+	•	Cross-account access restrictions
 
-## 🔍 Monitoring, Logging & Compliance
+⸻
 
-CloudTrail (Org-Wide)
-	•	Centralised audit logging
-	•	Covers all accounts and regions
+🧰 Terraform Design
 
-GuardDuty (Org-Wide)
-	•	Continuous threat detection
-	•	Auto-enabled for all current and future accounts created the organization
+Infrastructure as Code
+	•	Modular Terraform structure
+	•	Remote state with locking
+	•	Environment separation via workspaces
+	•	Security-focused modules for:
+	•	Security Lake
+	•	OpenSearch
+	•	Monitoring and alerting
 
-Security Hub
-	•	CIS AWS Foundations Benchmark enabled
-	•	Continuous compliance posture monitoring
-
-## 🧰 Terraform Design
-
-### Infrastructure as Code
-- Modular Terraform structure
-- Remote state management
-- Workspace-based environments
-- Security-focused modules for:
-  - AWS Security Lake configuration
-  - OpenSearch domain setup
-  - Monitoring and alerting
-
-### Backend & State Management
-- S3 bucket for remote state
-- DynamoDB table for state locking
-- Encryption at rest with KMS
-- Cross-account access controls
-
-### Security Data Pipeline
-```
-AWS Services (GuardDuty, CloudTrail, VPC Flow Logs)
-          ↓
-   AWS Security Lake (Centralized)
-          ↓
-   Amazon OpenSearch (Analytics)
-    ↓               ↓           ↓
-Dashboards    Alerts       Reports
-```
-
-## 📂 Project Structure
+Backend & State Security
+	•	S3 remote backend
+	•	DynamoDB state locking
+	•	KMS encryption
+	•	Restricted access to CI/CD roles only
 
 terraform-secure-aws-platform/
-├── org/                 # AWS Organizations, SCPs, GuardDuty, Security Hub
-├── network/             # VPC, subnets, routing, NACLs
-├── security/            # IAM, KMS, ACM, WAF
-├── compute/             # ALB, Auto Scaling Group, launch templates
-├── database/            # RDS and subnet groups
-├── backend.tf           # Remote Terraform backend
+├── org/            # Organizations, SCPs, GuardDuty, Security Hub
+├── network/        # VPCs, subnets, routing, NACLs
+├── security/       # IAM, KMS, WAF, ACM
+├── compute/        # ALB, ASG, launch templates
+├── database/       # RDS and subnet groups
+├── backend.tf
 ├── variables.tf
 ├── outputs.tf
 └── README.md
 
-## 🚀 Quick Start
+🎯 Why This Project Matters
 
-### Prerequisites
-- AWS Account with Organizations enabled
-- AWS CLI configured with admin access
-- Terraform >= 1.5.0
-- jq (for helper scripts)
+This project demonstrates:
+	•	Real SOC-style cloud security operations
+	•	Threat-driven detection engineering
+	•	Practical use of AWS Security Lake
+	•	OpenSearch-based security analytics
+	•	Severity-based alert escalation
+	•	MITRE ATT&CK alignment
+	•	Operational resilience through DLQ monitoring
 
-### Deployment Steps
-1. Create S3 backend and DynamoDB lock table
-2. Re-initialise Terraform with remote backend
-3. Apply infrastructure modules
+It shows not just how to deploy infrastructure, but how to secure, monitor, and operate it in production.
 
-## 🛠 Maintenance
+⸻
 
-### Upgrading
-1. Pull the latest changes
-2. Review release notes for breaking changes
-3. Run `terraform plan` to preview changes
-4. Apply changes with `terraform apply`
+📝 Author Notes
 
-### Backup & Recovery
-- RDS automated backups with 7-day retention
-- S3 versioning enabled
-- Point-in-time recovery available
+This project was built to demonstrate depth over breadth.
+Every service included has a clear operational or security purpose and reflects how real production platforms are designed and run.
 
-## 🤝 Contributing
+⸻
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## 📜 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 📝 Author Notes
-
-This project was built to demonstrate depth, not breadth. Every service included serves a clear security or reliability purpose and reflects how real production systems are designed and operated.
-
-## Future Improvements
-- [ ] Implement AWS Backup for cross-account backup management
-- [ ] Add AWS Config rules for compliance monitoring
-- [ ] Implement AWS Control Tower for large-scale deployments
-- [ ] Add container orchestration with ECS/EKS
+🚀 Future Improvements
+	•	AWS Backup (cross-account)
+	•	AWS Config rules
+	•	Control Tower integration
+	•	ECS / EKS workloads

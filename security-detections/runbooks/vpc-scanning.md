@@ -1,37 +1,83 @@
-# 🚨 VPC Network Scanning
+# 🚨 VPC Network Scanning / Traffic Anomalies
 
 ## Severity
-MEDIUM
+Medium
 
 ## Trigger
-- High volume of rejected traffic
-- Unusual destination ports detected
+
+• High volume of rejected VPC Flow Log traffic
+• Unusual or non-standard destination ports detected
+• Repeated connection attempts across multiple ports or targets
+
+⸻
 
 ## Why This Matters
-May indicate:
-- Reconnaissance activity
-- Misconfigured services
-- Lateral movement attempts
+
+This activity may indicate:
+
+• Network reconnaissance or port scanning
+• Misconfigured services or exposed resources
+• Early-stage lateral movement attempts
+
+While not always malicious, this behaviour warrants investigation to prevent escalation.
+
+⸻
 
 ## Investigation Steps
-1. Identify source and destination IPs
-2. Review ports involved
-3. Correlate with GuardDuty findings
 
-## Containment
-1. Block source IP using NACL or SG
-2. Restrict exposed ports
+1. Identify source IP address and affected destination resources
+2. Review destination ports and protocols involved
+3. Determine whether traffic originates internally or externally
+4. Correlate activity with GuardDuty findings or other alerts
+5. Validate whether the traffic aligns with expected application behaviour
 
-## Remediation
-- Review VPC security groups
-- Harden network segmentation
+⸻
 
-## DLQ Handling
-If alert delivery fails:
+## Containment Actions
+
+1. Block malicious or unauthorized source IPs using Security Groups or NACLs
+2. Restrict or close unnecessary exposed ports
+3. Apply temporary rate limiting or filtering if required
+
+⸻
+
+## Remediation Steps
+
+• Review and harden Security Group rules
+• Improve network segmentation between tiers
+• Ensure least-privilege network access policies are enforced
+• Validate firewall and routing configurations
+
+⸻
+
+## Validation
+
+• Confirm rejected traffic volume returns to baseline
+• Verify no further anomalous connection attempts occur
+• Ensure application functionality is not impacted
+• Close alert once behaviour is confirmed benign or remediated
+
+⸻
+
+## DLQ Handling (Alert Delivery Failure)
+
+If the alert was not delivered successfully:
+
 1. Check SQS queue: soc-security-alerts-dlq
-2. Identify failed event
-3. Fix SNS / IAM / subscription issue
-4. Replay event manually if required
+2. Identify failed alert messages
+3. Investigate SNS, IAM, or notification destination issues
+4. Manually notify SOC stakeholders if required
+5. Clear DLQ messages after delivery is restored
+
+⸻
 
 ## Related MITRE ATT&CK
-- T1046 – Network Service Scanning
+
+• T1046 – Network Service Scanning
+
+⸻
+
+## SOC Note
+
+Not all scans are attacks, but all scans deserve visibility.
+Early detection prevents escalation.

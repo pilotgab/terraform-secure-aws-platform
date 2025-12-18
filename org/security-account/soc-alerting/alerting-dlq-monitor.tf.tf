@@ -12,7 +12,9 @@ resource "aws_cloudwatch_metric_alarm" "soc_dlq_alarm" {
     QueueName = aws_sqs_queue.soc_alerts_dlq.name
   }
 
-  alarm_description = "DLQ contains undelivered SOC alert messages"
+  treat_missing_data = "notBreaching"
+
+  alarm_description = "SOC alert delivery failure: messages detected in SQS DLQ"
 
   alarm_actions = [
     aws_sns_topic.high.arn
