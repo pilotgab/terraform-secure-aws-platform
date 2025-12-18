@@ -55,6 +55,21 @@ resource "aws_lb_target_group" "app" {
   port     = 8080
   protocol = "HTTP"
   vpc_id   = aws_vpc.main.id
+
+  health_check {
+    enabled             = true
+    healthy_threshold   = 2
+    unhealthy_threshold = 2
+    timeout             = 5
+    interval            = 30
+    path                = "/"
+    protocol            = "HTTP"
+    matcher             = "200"
+  }
+
+  tags = {
+    Name = "app-target-group"
+  }
 }
 
 resource "aws_autoscaling_group" "app" {

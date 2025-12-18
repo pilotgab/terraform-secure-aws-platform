@@ -18,10 +18,8 @@ variable "vpc_flow_logs_bucket_arn" {
   type        = string
 }
 
-variable "vpc_flow_logs_role_arn" {
-  description = "The ARN of the IAM role for VPC flow logs."
-  type        = string
-}
+# Note: vpc_flow_logs_role_arn is not needed for S3 destination type
+# It's only required for CloudWatch Logs destinations
 
 variable "db_user" {
   description = "The username for the RDS database."

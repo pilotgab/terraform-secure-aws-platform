@@ -56,3 +56,8 @@ resource "aws_iam_role" "terraform_backend" {
     }]
   })
 }
+
+resource "aws_iam_role_policy_attachment" "terraform_backend" {
+  role       = aws_iam_role.terraform_backend.name
+  policy_arn = aws_iam_policy.terraform_backend.arn
+}

@@ -8,7 +8,8 @@ terraform {
     key            = "logging-account/terraform.tfstate"
     region         = "us-east-1"
     encrypt        = true
-    use_lockfile = "terraform-state-lock"
+    dynamodb_table = "terraform-state-lock"
+    # TODO: Replace <SECURITY_ACCOUNT_ID> with actual security account ID after account creation
     role_arn       = "arn:aws:iam::<SECURITY_ACCOUNT_ID>:role/TerraformBackendRole"
   }
 }

@@ -19,3 +19,8 @@ resource "aws_organizations_policy" "deny_local_state" {
     }]
   })
 }
+
+resource "aws_organizations_policy_attachment" "workload_attach" {
+  policy_id = aws_organizations_policy.deny_local_state.id
+  target_id = aws_organizations_account.workload.id
+}
